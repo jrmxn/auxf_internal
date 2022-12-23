@@ -118,5 +118,6 @@ try
     end
 catch errt
     warning('Save figure failed');
+    disp(errt);
 end
 end
