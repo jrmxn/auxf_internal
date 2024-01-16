@@ -44,7 +44,7 @@ for iter = 1:maxIter
     residuals = y - X * b;
 
     % Calculate bisquare weights
-    r = residuals / (k * mad(residuals, 1));
+    r = residuals / (k * mad_alternative(residuals, 1));
     weights = (abs(r) < 1) .* (1 - r.^2).^2;
 
     % Weighted least squares
