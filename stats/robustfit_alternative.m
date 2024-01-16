@@ -8,6 +8,9 @@ includeConst = 'on'; % Default to include constant term
 maxIter = 100; % Maximum number of iterations
 tol = 1e-5;    % Convergence tolerance for coefficient change
 
+case_reject = not(all(isfinite([X, y]), 2));
+X(case_reject, :) = [];
+y(case_reject, :) = [];
 
 % Process variable input arguments
 for i = 1:length(varargin)
@@ -49,7 +52,8 @@ for iter = 1:maxIter
 
     % Weighted least squares
     W = diag(weights);
-    b = (X' * W * X) \ (X' * W * y);
+    %     b = (X' * W * X) \ (X' * W * y);
+    b = pinv(X' * W * X) * (X' * W * y);  % more robust v2
 
     % Check for convergence
     if max(abs(b - previous_b)) < tol
