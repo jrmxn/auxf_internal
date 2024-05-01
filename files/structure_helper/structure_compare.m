@@ -1,4 +1,4 @@
-function areIdentical = compare_structures(S1, S2, excludeFields)
+function areIdentical = structure_compare(S1, S2, excludeFields)
 % GPT4 wrote this - 2024-05-01
 
     % Initially assume the structures are identical
