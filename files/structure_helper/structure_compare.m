@@ -62,6 +62,11 @@ function areIdentical = structure_compare(S1, S2, excludeFields)
                     identical = false;
                     return;
                 end
+            elseif isstring(value1) && isstring(value2)
+                if ~isequal(value1, value2)
+                    identical = false;
+                    return;
+                end
             else
                 fprintf('Skipping comparison of complex or unsupported data types in field: %s\n', strjoin(newPath, '.'));
             end
