@@ -1,6 +1,4 @@
-function hashString = structure_to_hash(S, excludeFields, hashLength)
-% GPT4 wrote this - 2024-05-01
-
+function hashString = structure_to_hash(S, excludeFields, hashLength, excludeStrings)
     % Set default for excludeFields if it's not provided
     if nargin < 2 || isempty(excludeFields)
         excludeFields = {};
@@ -9,9 +7,18 @@ function hashString = structure_to_hash(S, excludeFields, hashLength)
     if nargin < 3
         hashLength = 128; % Default to MD5
     end
+    if isempty(hashLength)
+        hashLength = 128; % Default to MD5
+    end
+    
+    if nargin < 4
+        excludeStrings = {};
+    end
 
     % Exclude specified fields from the structure
     S = excludeSpecifiedFields(S, excludeFields);
+
+    S = excludeSpecifiedStrings(S, excludeStrings);
     
     % Serialize the structure to a JSON string
     jsonString = jsonencode(S);
@@ -37,7 +44,6 @@ function hashString = structure_to_hash(S, excludeFields, hashLength)
     end
 end
 
-
 function S = excludeSpecifiedFields(S, fields)
     % Iterate over all specified fields to exclude
     for i = 1:length(fields)
@@ -54,6 +60,25 @@ function S = removeField(S, fieldPath)
         else
             % Recurse deeper into the structure
             S.(fieldPath{1}) = removeField(S.(fieldPath{1}), fieldPath(2:end));
+        end
+    end
+end
+
+function S = excludeSpecifiedStrings(S, excludeStrings)
+    if ~isstruct(S)
+        return;
+    end
+
+    fields = fieldnames(S);
+    for i = 1:length(fields)
+        field = fields{i};
+
+        % Check if the field name matches any of the exclude strings
+        if any(strcmp(field, excludeStrings))
+            S = rmfield(S, field);
+        else
+            % If the field is a structure, recurse into it
+            S.(field) = excludeSpecifiedStrings(S.(field), excludeStrings);
         end
     end
 end
