@@ -1,4 +1,8 @@
 function va = update_struct(struct_local, sub, ch_, pos, str_param, va_default)
+sub = matlab.lang.makeValidName(sub);
+ch_ = matlab.lang.makeValidName(ch_);
+pos = matlab.lang.makeValidName(pos);
+str_param = matlab.lang.makeValidName(str_param);
 va = va_default;
 if isfield(struct_local, sub)
     if isfield(struct_local.(sub), ch_)
